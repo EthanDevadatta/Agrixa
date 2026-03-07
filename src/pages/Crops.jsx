@@ -6,10 +6,10 @@ import { recommendCrops } from '../utils/recommendation.js'
 import { useI18n } from '../i18n/I18nProvider.jsx'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAY15sLoKJnaBz5lsFmM2t1V1ss8W3hf00',
-  authDomain: 'MDP.firebaseapp.com',
-  databaseURL: 'https://mdp-database-da5f9-default-rtdb.asia-southeast1.firebasedatabase.app',
-  projectId: '1:863258661550:web:d5dc53189a25c6fab4133f',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_FIREBASE_DATABASE_URL,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
 }
 if (!firebase.apps.length) firebase.initializeApp(firebaseConfig)
 const database = firebase.database()
@@ -99,65 +99,65 @@ export default function Crops() {
         </div>
 
         <div className="p-6">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <div className="rounded-2xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
-            <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('currentConditionsUsed')}</div>
-            <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
-              <MetricRow
-                label={t('temperature')}
-                value={readings.temperature != null ? `${readings.temperature}°C` : '—'}
-              />
-              <MetricRow
-                label={t('humidity')}
-                value={readings.humidity != null ? `${readings.humidity}%` : '—'}
-              />
-              <MetricRow
-                label={t('soilMoisture')}
-                value={readings.moisture != null ? `${readings.moisture}%` : '—'}
-              />
-              <MetricRow
-                label={t('light')}
-                value={readings.light != null ? `${readings.light}%` : '—'}
-              />
-              <MetricRow
-                label={t('nutrientsTds')}
-                value={readings.tds != null ? `${readings.tds} ppm` : '—'}
-              />
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
+              <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('currentConditionsUsed')}</div>
+              <div className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2">
+                <MetricRow
+                  label={t('temperature')}
+                  value={readings.temperature != null ? `${readings.temperature}°C` : '—'}
+                />
+                <MetricRow
+                  label={t('humidity')}
+                  value={readings.humidity != null ? `${readings.humidity}%` : '—'}
+                />
+                <MetricRow
+                  label={t('soilMoisture')}
+                  value={readings.moisture != null ? `${readings.moisture}%` : '—'}
+                />
+                <MetricRow
+                  label={t('light')}
+                  value={readings.light != null ? `${readings.light}%` : '—'}
+                />
+                <MetricRow
+                  label={t('nutrientsTds')}
+                  value={readings.tds != null ? `${readings.tds} ppm` : '—'}
+                />
+              </div>
+              <div className="mt-3 flex flex-wrap gap-2">
+                <Pill>{t('light')}: {readings.light != null ? `${readings.light}%` : '—'}</Pill>
+                <Pill>TDS: {readings.tds != null ? `${readings.tds} ppm` : '—'}</Pill>
+              </div>
             </div>
-            <div className="mt-3 flex flex-wrap gap-2">
-              <Pill>{t('light')}: {readings.light != null ? `${readings.light}%` : '—'}</Pill>
-              <Pill>TDS: {readings.tds != null ? `${readings.tds} ppm` : '—'}</Pill>
-            </div>
-          </div>
 
-          <div className="rounded-2xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
-            <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('topRecommendations')}</div>
-            <div className="mt-3 space-y-3">
-              {recommendations.map((r) => (
-                <div key={r.crop.id} className="rounded-2xl border border-emerald-200/60 bg-emerald-50/40 p-4 dark:border-emerald-800/50 dark:bg-emerald-900/30">
-                  <div className="flex items-start justify-between gap-3">
-                    <div>
-                      <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{r.crop.name}</div>
-                      <div className="mt-1 text-xs text-slate-600 dark:text-slate-400">{r.crop.notes}</div>
+            <div className="rounded-2xl border border-slate-200/60 bg-slate-50/50 p-4 dark:border-slate-700 dark:bg-slate-800/40">
+              <div className="text-xs font-semibold text-slate-900 dark:text-slate-100">{t('topRecommendations')}</div>
+              <div className="mt-3 space-y-3">
+                {recommendations.map((r) => (
+                  <div key={r.crop.id} className="rounded-2xl border border-emerald-200/60 bg-emerald-50/40 p-4 dark:border-emerald-800/50 dark:bg-emerald-900/30">
+                    <div className="flex items-start justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">{r.crop.name}</div>
+                        <div className="mt-1 text-xs text-slate-600 dark:text-slate-400">{r.crop.notes}</div>
+                      </div>
+                      <div className="rounded-xl bg-white px-3 py-2 text-right shadow-sm dark:bg-slate-900/80">
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">{t('match')}</div>
+                        <div className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{r.confidencePct}%</div>
+                      </div>
                     </div>
-                    <div className="rounded-xl bg-white px-3 py-2 text-right shadow-sm dark:bg-slate-900/80">
-                      <div className="text-[11px] text-slate-500 dark:text-slate-400">{t('match')}</div>
-                      <div className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">{r.confidencePct}%</div>
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {r.reasons.map((reason) => (
+                        <Pill key={reason}>{reason}</Pill>
+                      ))}
                     </div>
                   </div>
-                  <div className="mt-3 flex flex-wrap gap-2">
-                    {r.reasons.map((reason) => (
-                      <Pill key={reason}>{reason}</Pill>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-3 text-xs text-slate-500 dark:text-slate-400">
-              {t('ruleBasedDisclaimer')}
+                ))}
+              </div>
+              <div className="mt-3 text-xs text-slate-500 dark:text-slate-400">
+                {t('ruleBasedDisclaimer')}
+              </div>
             </div>
           </div>
-        </div>
         </div>
       </div>
 
